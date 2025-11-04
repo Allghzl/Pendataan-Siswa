@@ -19,7 +19,6 @@
         <form action="{{ route('siswa.store') }}" method="POST">
             @csrf
 
-            {{-- NIS --}}
             <div class="mb-4">
                 <label class="block text-gray-700 mb-2">NIS</label>
                 <input type="number" name="nis" value="{{ old('nis') }}"
@@ -27,7 +26,6 @@
                     placeholder="Masukkan NIS Siswa" required>
             </div>
 
-            {{-- Nama Lengkap --}}
             <div class="mb-4">
                 <label class="block text-gray-700 mb-2">Nama Lengkap</label>
                 <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}"
@@ -35,7 +33,6 @@
                     placeholder="Masukkan Nama Lengkap" required>
             </div>
 
-            {{-- Jenis Kelamin --}}
             <div class="mb-4">
                 <label class="block text-gray-700 mb-2">Jenis Kelamin</label>
                 <div class="flex items-center gap-5">
@@ -50,7 +47,6 @@
                 </div>
             </div>
 
-            {{-- Alamat --}}
             <div class="mb-4">
                 <label class="block text-gray-700 mb-2">Alamat</label>
                 <textarea name="alamat"
@@ -58,7 +54,6 @@
                     placeholder="Masukkan Alamat">{{ old('alamat') }}</textarea>
             </div>
 
-            {{-- Tanggal Lahir --}}
             <div class="mb-4">
                 <label class="block text-gray-700 mb-2">Tanggal Lahir</label>
                 <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}"
@@ -66,7 +61,6 @@
                     required>
             </div>
 
-            {{-- Kelas Dropdown --}}
             <div class="mb-4">
                 <label class="block text-gray-700 mb-2">Kelas</label>
                 <select id="kelasSelect" name="kelas_id"
@@ -75,14 +69,13 @@
                     <option value="">-- Pilih Kelas --</option>
                     @foreach ($semuaKelas as $kelas)
                         <option value="{{ $kelas->id }}" data-nama="{{ $kelas->nama_kelas }}"
-                            data-wali="{{ $kelas->wali_kelas }}" {{ old('kelas_id') == $kelas->id ? 'selected' : '' }}>
+                            data-wali="{{ $kelas->wali_kelas }}">
                             {{ $kelas->nama_kelas }} (Wali: {{ $kelas->wali_kelas }})
                         </option>
                     @endforeach
                 </select>
             </div>
 
-            {{-- Auto Fill Info Box --}}
             <div id="infoKelas"
                 class="hidden transition-all duration-300 mb-4 bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
                 <p class="text-gray-800"><strong>Nama Kelas:</strong> <span id="namaKelas"></span></p>
@@ -102,7 +95,6 @@
         </form>
     </div>
 
-    {{-- JavaScript buat auto isi nama & wali kelas --}}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const select = document.getElementById('kelasSelect');
@@ -111,9 +103,9 @@
             const waliKelas = document.getElementById('waliKelas');
 
             select.addEventListener('change', function () {
-                const selectedOption = this.options[this.selectedIndex];
-                const nama = selectedOption.getAttribute('data-nama');
-                const wali = selectedOption.getAttribute('data-wali');
+                const option = this.options[this.selectedIndex];
+                const nama = option.getAttribute('data-nama');
+                const wali = option.getAttribute('data-wali');
 
                 if (nama && wali) {
                     infoBox.classList.remove('hidden');
