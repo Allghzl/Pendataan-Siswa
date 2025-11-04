@@ -10,6 +10,7 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
+<<<<<<< HEAD:database/migrations/2025_11_04_041852_create_siswa_table.php
     {
         Schema::create('siswa', function (Blueprint $table) {
             $table->id();
@@ -26,13 +27,25 @@ return new class extends Migration
             $table->timestamps();
         });
     }
+=======
+{
+    Schema::create('siswas', function (Blueprint $table) {
+        $table->id();
+        $table->string('nis')->unique();
+        $table->string('nama');
+        $table->string('jenis_kelamin');
+        $table->text('alamat')->nullable();
+        $table->date('tanggal_lahir')->nullable();
+        $table->string('kelas'); 
+        $table->string('wali_kelas');
+        $table->timestamps();
+    });
+}
+>>>>>>> d23261ab4ee51946393284d01f95edff4f38cc2f:database/migrations/2025_11_04_041852_create_siswas_table.php
 
+public function down(): void
+{
+    Schema::dropIfExists('siswas');
+}
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('siswa');
-    }
 };
