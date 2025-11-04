@@ -9,55 +9,64 @@ class KelasController extends Controller
 {
     public function index()
     {
-        $dataKelas = Kelas::all();
-        return view('kelas.index', ['semuaKelas' => $dataKelas]);
+        $semuaKelas = Kelas::all();
+        return view('kelas.index', compact('semuaKelas'));
     }
+
     // CREATE (Form Tambah)
     public function create()
     {
         return view('kelas.create');
     }
+
     // STORE (Proses Simpan)
     public function store(Request $request)
     {
-        // Validasi data
         $request->validate([
             'nama_kelas' => 'required|string|max:100',
             'wali_kelas' => 'required|string|max:255',
         ]);
-        // Simpan ke database
-        Kelas::create($request->all());
-        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil
-ditambahkan.');
+
+        Kelas::create([
+            'nama_kelas' => $request->nama_kelas,
+            'wali_kelas' => $request->wali_kelas,
+        ]);
+
+        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil ditambahkan.');
     }
-    // SHOW (Detail) - Boleh diskip jika tidak perlu
-    public function show(Kelas $kela) // $kela adalah variabel dari model binding
+
+    // SHOW (Detail)
+    public function show(Kelas $kelas)
     {
-        //
+        return view('kelas.show', compact('kelas'));
     }
+
     // EDIT (Form Ubah)
-    public function edit(Kelas $kela) // Otomatis find $id
+    public function edit(Kelas $kelas)
     {
-        return view('kelas.edit', ['kelas' => $kela]);
+        return view('kelas.edit', compact('kelas'));
     }
+
     // UPDATE (Proses Ubah)
-    public function update(Request $request, Kelas $kela)
+    public function update(Request $request, Kelas $kelas)
     {
         $request->validate([
             'nama_kelas' => 'required|string|max:100',
             'wali_kelas' => 'required|string|max:255',
         ]);
-        // Update data
-        $kela->update($request->all());
-        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil
-diubah.');
+
+        $kelas->update([
+            'nama_kelas' => $request->nama_kelas,
+            'wali_kelas' => $request->wali_kelas,
+        ]);
+
+        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil diubah.');
     }
+
     // DELETE (Proses Hapus)
-    public function destroy(Kelas $kela)
+    public function destroy(Kelas $kelas)
     {
-        // Hapus data
-        $kela->delete();
-        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil
-dihapus.');
+        $kelas->delete();
+        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil dihapus.');
     }
 }
