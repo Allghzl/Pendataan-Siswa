@@ -1,7 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return view('welcome');
-});
+use App\Http\Controllers\KelasController;
+use App\Http\Controllers\SiswaController;
+// Route utama kita arahkan ke daftar siswa
+Route::get('/', [SiswaController::class, 'index'])->name('home');
+// Routes untuk CRUD Kelas
+Route::resource('kelas', KelasController::class);
+// Routes untuk CRUD Siswa
+Route::resource('siswa', SiswaController::class);
