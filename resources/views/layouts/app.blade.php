@@ -19,10 +19,8 @@
         </a>
 
         <ul class="hidden md:flex gap-8 text-gray-700 font-medium">
-            <li><a href="/" class="hover:text-gray-900 hover:underline underline-offset-4">Home</a></li>
-            <li><a href="/about" class="hover:text-gray-900 hover:underline underline-offset-4">About</a></li>
-            <li><a href="/contact" class="hover:text-gray-900 hover:underline underline-offset-4">Contact</a></li>
-            <li><a href="/portofolio" class="hover:text-gray-900 hover:underline underline-offset-4">Portofolio</a></li>
+            <li><a href="/siswa" class="hover:text-gray-900 hover:underline underline-offset-4">Siswa</a></li>
+            <li><a href="/kelas" class="hover:text-gray-900 hover:underline underline-offset-4">Kelas</a></li>
         </ul>
     </nav>
 
