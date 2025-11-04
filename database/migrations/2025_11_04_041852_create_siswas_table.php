@@ -10,29 +10,23 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('siswas', function (Blueprint $table) {
-            $table->id();
-            $table->string('nis')->unique();
-            $table->string('nama_lengkap');
-            $table->enum('jenis_kelamin', ['L', 'P']);
-            $table->text('alamat')->nullable();
-            $table->date('tanggal_lahir')->nullable();
-            // Ini adalah Foreign Key
-            $table->foreignId('kelas_id')
-                ->nullable() // Boleh null jika siswa belum punya kelas
-                ->constrained('kelas') // Merujuk ke tabel 'kelas'
-                ->onDelete('set null'); // Jika kelas dihapus, 'kelas_id' siswa jadi NULL
-            $table->timestamps();
-        });
-    }
+{
+    Schema::create('siswas', function (Blueprint $table) {
+        $table->id();
+        $table->string('nis')->unique();
+        $table->string('nama');
+        $table->string('jenis_kelamin');
+        $table->text('alamat')->nullable();
+        $table->date('tanggal_lahir')->nullable();
+        $table->string('kelas'); 
+        $table->string('wali_kelas');
+        $table->timestamps();
+    });
+}
 
+public function down(): void
+{
+    Schema::dropIfExists('siswas');
+}
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('siswa');
-    }
 };

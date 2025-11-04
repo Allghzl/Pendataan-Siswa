@@ -14,9 +14,9 @@
     </div>
 
     @if(session('success'))
-        <div class="bg-green-100 text-green-700 px-4 py-2 rounded-md mb-4">
-            {{ session('success') }}
-        </div>
+    <div class="bg-green-100 text-green-700 px-4 py-2 rounded-md mb-4">
+        {{ session('success') }}
+    </div>
     @endif
 
     <div class="overflow-x-auto bg-white shadow-md rounded-lg">
@@ -36,43 +36,50 @@
             </thead>
 
             <tbody>
-                @forelse ($siswa as $index => $item)
-                    <tr class="border-b hover:bg-gray-50">
-                        <td class="py-3 px-4">{{ $index + 1 }}</td>
-                        <td class="py-3 px-4">{{ $item->nis }}</td>
-                        <td class="py-3 px-4">{{ $item->nama_lengkap }}</td>
-                        <td class="py-3 px-4">{{ $item->jenis_kelamin }}</td>
-                        <td class="py-3 px-4">{{ $item->alamat }}</td>
-                        <td class="py-3 px-4">{{ $item->tanggal_lahir }}</td>
-                        <td class="py-3 px-4">{{ $item->kelas }}</td>
-                        <td class="py-3 px-4">{{ $item->wali_kelas }}</td>
+                @forelse ($siswa as $s => $item)
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-3 px-4">{{ $s + 1 }}</td>
+                    <td class="py-3 px-4">{{ $item->nis }}</td>
+                    <td class="py-3 px-4">{{ $item->nama }}</td>
+                    <td class="py-3 px-4">{{ $item->jenis_kelamin }}</td>
+                    <td class="py-3 px-4">{{ $item->alamat }}</td>
+                    <td class="py-3 px-4">{{ $item->tanggal_lahir }}</td>
+                    <td class="py-3 px-4">{{ $item->kelas }}</td>
+                    <td class="py-3 px-4">{{ $item->wali_kelas }}</td>
 
-                        <td class="py-3 px-4 flex gap-3">
-                            <a href="{{ route('siswa.edit', $item->id) }}"
-                               class="text-yellow-600 hover:text-yellow-800 font-medium">
-                                Edit
-                            </a>
+                    <td class="py-3 px-4 flex gap-3">
+                        <a href="{{ route('siswa.show', $item->id) }}"
+                            class="text-blue-600 hover:text-blue-800 font-medium">
+                            Detail
+                        </a>
 
-                            <form action="{{ route('siswa.destroy', $item->id) }}" 
-                                method="POST"
-                                onsubmit="return confirm('Hapus data ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                        class="text-red-600 hover:text-red-800 font-medium">
-                                    Hapus
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
+                        <a href="{{ route('siswa.edit', $item->id) }}"
+                            class="text-yellow-600 hover:text-yellow-800 font-medium">
+                            Edit
+                        </a>
+
+                        <form action="{{ route('siswa.destroy', $item->id) }}"
+                            method="POST"
+                            onsubmit="return confirm('Hapus data ini?')"
+                            class="inline-block">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-600 hover:text-red-800 font-medium">
+                                Hapus
+                            </button>
+                        </form>
+                    </td>
+
+                </tr>
                 @empty
-                    <tr>
-                        <td colspan="9" class="py-5 text-center text-gray-500">
-                            Tidak ada data siswa.
-                        </td>
-                    </tr>
+                <tr>
+                    <td class="py-3 px-4 text-center text-gray-500" colspan="9">
+                        Tidak ada data siswa.
+                    </td>
+                </tr>
                 @endforelse
             </tbody>
+
         </table>
     </div>
 </div>
