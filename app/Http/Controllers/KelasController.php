@@ -3,23 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kelas;
+use App\Models\Siswa;
 use Illuminate\Http\Request;
 
 class KelasController extends Controller
 {
+    // ✅ Menampilkan semua data kelas (kecuali yang terhapus)
     public function index()
     {
-        $semuaKelas = Kelas::all();
+        $semuaKelas = Kelas::withoutTrashed()->get();
         return view('kelas.index', compact('semuaKelas'));
     }
 
-    // CREATE (Form Tambah)
+    // ✅ Form Tambah
     public function create()
     {
         return view('kelas.create');
     }
 
-    // STORE (Proses Simpan)
+    // ✅ Proses Tambah Kelas
     public function store(Request $request)
     {
         $request->validate([
@@ -27,46 +29,73 @@ class KelasController extends Controller
             'wali_kelas' => 'required|string|max:255',
         ]);
 
-        Kelas::create([
-            'nama_kelas' => $request->nama_kelas,
-            'wali_kelas' => $request->wali_kelas,
-        ]);
+        Kelas::create($request->only(['nama_kelas', 'wali_kelas']));
 
         return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil ditambahkan.');
     }
 
-    // SHOW (Detail)
-    public function show(Kelas $kelas)
+    // ✅ Detail kelas + siswa yang terkait
+    public function show($id)
     {
+        $kelas = Kelas::with('siswa')->withTrashed()->findOrFail($id);
         return view('kelas.show', compact('kelas'));
     }
 
-    // EDIT (Form Ubah)
-    public function edit(Kelas $kelas)
+    // ✅ Form Edit
+    public function edit($id)
     {
+        $kelas = Kelas::findOrFail($id);
         return view('kelas.edit', compact('kelas'));
     }
 
-    // UPDATE (Proses Ubah)
-    public function update(Request $request, Kelas $kelas)
+    // ✅ Update Data
+    public function update(Request $request, $id)
     {
         $request->validate([
             'nama_kelas' => 'required|string|max:100',
             'wali_kelas' => 'required|string|max:255',
         ]);
 
-        $kelas->update([
-            'nama_kelas' => $request->nama_kelas,
-            'wali_kelas' => $request->wali_kelas,
-        ]);
+        $kelas = Kelas::findOrFail($id);
+        $kelas->update($request->only(['nama_kelas', 'wali_kelas']));
 
         return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil diubah.');
     }
 
-    // DELETE (Proses Hapus)
-    public function destroy(Kelas $kelas)
+    // ✅ Soft Delete
+    public function destroy($id)
     {
+        $kelas = Kelas::findOrFail($id);
         $kelas->delete();
+
         return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil dihapus.');
+    }
+
+    // ✅ Halaman Recycle Bin
+    public function trash()
+    {
+        $kelasTerhapus = Kelas::onlyTrashed()->get();
+        return view('kelas.trash', compact('kelasTerhapus'));
+    }
+
+    // ✅ Restore
+    public function restore($id)
+    {
+        $kelas = Kelas::onlyTrashed()->findOrFail($id);
+        $kelas->restore();
+
+        return redirect()->route('kelas.trash')->with('success', 'Data kelas berhasil dikembalikan!');
+    }
+
+    // ✅ Hapus Permanen + siswa yang terkait juga
+    public function forceDelete($id)
+    {
+        $kelas = Kelas::onlyTrashed()->findOrFail($id);
+
+        Siswa::where('kelas_id', $id)->forceDelete();
+
+        $kelas->forceDelete();
+
+        return redirect()->route('kelas.trash')->with('success', 'Data kelas berhasil dihapus permanen!');
     }
 }

@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Storage;
 
 class SiswaController extends Controller
 {
-    //  Menampilkan semua siswa
+    // ✅ Menampilkan semua siswa
     public function index()
     {
         $semuaSiswa = Siswa::with('kelas')->get();
         return view('siswa.index', compact('semuaSiswa'));
     }
 
-    //  Menampilkan detail siswa (support foto + kelas)
+    // ✅ Menampilkan detail siswa (support foto + kelas)
     public function show($id)
     {
         $siswa = Siswa::withTrashed()->with('kelas')->findOrFail($id);
@@ -29,7 +29,7 @@ class SiswaController extends Controller
         return view('siswa.create', compact('semuaKelas'));
     }
 
-    // Store siswa + upload foto
+    // ✅ Store siswa + upload foto
     public function store(Request $request)
     {
         $request->validate([
@@ -43,12 +43,7 @@ class SiswaController extends Controller
         ]);
 
         $data = $request->only([
-            'nis',
-            'nama_lengkap',
-            'jenis_kelamin',
-            'alamat',
-            'tanggal_lahir',
-            'kelas_id'
+            'nis', 'nama_lengkap', 'jenis_kelamin', 'alamat', 'tanggal_lahir', 'kelas_id'
         ]);
 
         if ($request->hasFile('foto')) {
@@ -61,7 +56,7 @@ class SiswaController extends Controller
         return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil ditambahkan!');
     }
 
-    // Edit siswa
+    // ✅ Edit siswa
     public function edit($id)
     {
         $siswa = Siswa::findOrFail($id);
@@ -69,7 +64,7 @@ class SiswaController extends Controller
         return view('siswa.edit', compact('siswa', 'semuaKelas'));
     }
 
-    //  Update siswa
+    // ✅ Update + update foto baru
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -85,12 +80,7 @@ class SiswaController extends Controller
         $siswa = Siswa::findOrFail($id);
 
         $data = $request->only([
-            'nis',
-            'nama_lengkap',
-            'jenis_kelamin',
-            'alamat',
-            'tanggal_lahir',
-            'kelas_id'
+            'nis', 'nama_lengkap', 'jenis_kelamin', 'alamat', 'tanggal_lahir', 'kelas_id'
         ]);
 
         if ($request->hasFile('foto')) {
@@ -106,7 +96,7 @@ class SiswaController extends Controller
         return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil diperbarui!');
     }
 
-    //  Soft Delete
+    // ✅ Soft Delete
     public function destroy($id)
     {
         $siswa = Siswa::findOrFail($id);
@@ -114,14 +104,14 @@ class SiswaController extends Controller
         return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil dihapus!');
     }
 
-    // Recycle Bin
+    // ✅ Recycle Bin
     public function trash()
     {
         $siswaTerhapus = Siswa::onlyTrashed()->latest()->get();
         return view('siswa.trash', compact('siswaTerhapus'));
     }
 
-    // Restore
+    // ✅ Restore
     public function restore($id)
     {
         $siswa = Siswa::onlyTrashed()->findOrFail($id);
@@ -129,7 +119,7 @@ class SiswaController extends Controller
         return redirect()->route('siswa.trash')->with('success', 'Data berhasil direstore!');
     }
 
-    // Force Delete
+    // ✅ Delete Permanent
     public function forceDelete($id)
     {
         $siswa = Siswa::onlyTrashed()->findOrFail($id);

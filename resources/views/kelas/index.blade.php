@@ -7,10 +7,20 @@
     <div class="max-w-7xl mx-auto mt-10">
         <div class="flex justify-between items-center mb-5">
             <h1 class="text-2xl font-bold text-gray-700">Daftar Kelas</h1>
-            <a href="{{ route('kelas.create') }}"
-                class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
-                + Tambah Kelas
-            </a>
+
+            <div class="flex gap-3">
+                {{-- Tombol Recycle Bin --}}
+                <a href="{{ route('kelas.trash') }}"
+                    class="bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200">
+                    🗑 Recycle Bin
+                </a>
+
+                {{-- Tombol Tambah Kelas --}}
+                <a href="{{ route('kelas.create') }}"
+                    class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
+                    + Tambah Kelas
+                </a>
+            </div>
 
         </div>
 
@@ -41,7 +51,7 @@
                             <td class="py-3 px-4 flex gap-3">
                                 <a href="{{ route('kelas.edit', $item->id) }}"
                                     class="text-yellow-600 hover:text-yellow-800 font-medium">
-                                    Edit
+                                    ✏ Edit
                                 </a>
 
                                 <form action="{{ route('kelas.destroy', $item->id) }}" method="POST"
@@ -49,9 +59,10 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:text-red-800 font-medium">
-                                        Hapus
+                                        ❌ Hapus
                                     </button>
                                 </form>
+
                             </td>
                         </tr>
                     @empty
