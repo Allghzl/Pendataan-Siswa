@@ -8,21 +8,28 @@ use App\Models\Kelas;
 
 class SiswaController extends Controller
 {
-    // Menampilkan semua siswa
+    // 🔹 Menampilkan semua siswa
     public function index()
     {
         $semuaSiswa = Siswa::with('kelas')->get();
         return view('siswa.index', compact('semuaSiswa'));
     }
 
-    // Form tambah siswa
+    // 🔹 Menampilkan detail siswa
+    public function show($id)
+    {
+        $siswa = Siswa::with('kelas')->findOrFail($id);
+        return view('siswa.detail', compact('siswa'));
+    }
+
+    // 🔹 Form tambah siswa
     public function create()
     {
         $semuaKelas = Kelas::all(['id', 'nama_kelas', 'wali_kelas']);
         return view('siswa.create', compact('semuaKelas'));
     }
 
-    // Simpan data baru
+    // 🔹 Simpan data siswa baru
     public function store(Request $request)
     {
         $request->validate([
@@ -32,21 +39,31 @@ class SiswaController extends Controller
             'alamat' => 'required|string',
             'tanggal_lahir' => 'required|date',
             'kelas_id' => 'required|exists:kelas,id',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:5120', // validasi tambahan
         ]);
 
-        Siswa::create([
-            'nis' => $request->nis,
-            'nama_lengkap' => $request->nama_lengkap,
-            'jenis_kelamin' => $request->jenis_kelamin,
-            'alamat' => $request->alamat,
-            'tanggal_lahir' => $request->tanggal_lahir,
-            'kelas_id' => $request->kelas_id,
+        // Simpan data request ke array
+        $data = $request->only([
+            'nis',
+            'nama_lengkap',
+            'jenis_kelamin',
+            'alamat',
+            'tanggal_lahir',
+            'kelas_id',
         ]);
 
-        return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil ditambahkan.');
+        // Upload foto kalau ada
+        if ($request->hasFile('foto')) {
+            $path = $request->file('foto')->store('public/foto_siswa');
+            $data['foto'] = str_replace('public/', 'storage/', $path);
+        }
+
+        Siswa::create($data);
+
+        return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil ditambahkan!');
     }
 
-    // Edit siswa
+    // 🔹 Form edit siswa
     public function edit($id)
     {
         $siswa = Siswa::findOrFail($id);
@@ -54,7 +71,7 @@ class SiswaController extends Controller
         return view('siswa.edit', compact('siswa', 'semuaKelas'));
     }
 
-    // Update siswa
+    // 🔹 Update siswa
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -64,18 +81,42 @@ class SiswaController extends Controller
             'alamat' => 'required|string',
             'tanggal_lahir' => 'required|date',
             'kelas_id' => 'required|exists:kelas,id',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:5120', // validasi foto juga
         ]);
 
         $siswa = Siswa::findOrFail($id);
-        $siswa->update($request->all());
+
+        $data = $request->only([
+            'nis',
+            'nama_lengkap',
+            'jenis_kelamin',
+            'alamat',
+            'tanggal_lahir',
+            'kelas_id',
+        ]);
+
+        if ($request->hasFile('foto')) {
+            if ($siswa->foto && file_exists(public_path($siswa->foto))) {
+                unlink(public_path($siswa->foto));
+            }
+            $path = $request->file('foto')->store('public/foto_siswa');
+            $data['foto'] = str_replace('public/', 'storage/', $path);
+        }
+
+        $siswa->update($data);
 
         return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil diperbarui!');
     }
 
-    // Hapus siswa
+    // DELETE SISWA
     public function destroy($id)
     {
         $siswa = Siswa::findOrFail($id);
+
+        if ($siswa->foto && file_exists(public_path($siswa->foto))) {
+            unlink(public_path($siswa->foto));
+        }
+
         $siswa->delete();
 
         return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil dihapus!');
