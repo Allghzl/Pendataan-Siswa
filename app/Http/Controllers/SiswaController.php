@@ -80,4 +80,40 @@ class SiswaController extends Controller
 
         return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil dihapus!');
     }
+
+    public function restore($id)
+    {
+    $siswa = Siswa::onlyTrashed()->findOrFail($id);
+    $siswa->restore();
+
+    return redirect()->back()->with('success', 'Data berhasil direstore!');
+    }
+
+    public function forceDelete($id)
+    {
+    $siswa = Siswa::onlyTrashed()->findOrFail($id);
+    $siswa->forceDelete();
+
+    return redirect()->back()->with('success', 'Data berhasil dihapus permanen!');
+    }
+
+    public function trash()
+    {
+    $siswaTerhapus = Siswa::onlyTrashed()->get();
+
+    return view('siswa.index', [
+        'semuaSiswa' => Siswa::all(),
+        'siswaTerhapus' => $siswaTerhapus
+    ]);
+    }
+
+    public function show($id)
+    {
+    $siswa = Siswa::withTrashed()->findOrFail($id);
+    return view('siswa.show', compact('siswa'));
+    }
+
+
 }
+
+
