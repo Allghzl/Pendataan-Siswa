@@ -38,6 +38,7 @@ class KelasController extends Controller
     // SHOW (Detail)
     public function show(Kelas $kelas)
     {
+        $kelas->load('siswa');
         return view('kelas.show', compact('kelas'));
     }
 

@@ -23,12 +23,12 @@ class SiswaSeeder extends Seeder
             for ($i = 1; $i <= 10; $i++) {
                 Siswa::create([
                     'nis' => $faker->unique()->numerify('########'),
-                    'nama_lengkap' => $faker->name,
+                    'nama_lengkap' => $faker->firstName . ' ' . $faker->lastName, // tanpa gelar
                     'jenis_kelamin' => $faker->randomElement(['L', 'P']),
                     'alamat' => $faker->address,
                     'tanggal_lahir' => $faker->date('Y-m-d', '2010-12-31'),
                     'kelas_id' => $kelas->id,
-                    'foto' => $faker->imageUrl(200, 200, 'people'),
+                    'foto' => "https://picsum.photos/seed/{$faker->unique()->word}/200/200",
                 ]);
             }
         }

@@ -16,7 +16,7 @@
             </div>
         @endif
 
-        <form action="{{ route('siswa.store') }}" method="POST">
+        <form action="{{ route('siswa.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="mb-4">
@@ -37,11 +37,13 @@
                 <label class="block text-gray-700 mb-2">Jenis Kelamin</label>
                 <div class="flex items-center gap-5">
                     <label class="flex items-center">
-                        <input type="radio" name="jenis_kelamin" value="L" {{ old('jenis_kelamin') == 'L' ? 'checked' : '' }}>
+                        <input type="radio" name="jenis_kelamin" value="L"
+                            {{ old('jenis_kelamin', 'L') == 'L' ? 'checked' : '' }} required>
                         <span class="ml-2 text-gray-700">Laki-laki</span>
                     </label>
                     <label class="flex items-center">
-                        <input type="radio" name="jenis_kelamin" value="P" {{ old('jenis_kelamin') == 'P' ? 'checked' : '' }}>
+                        <input type="radio" name="jenis_kelamin" value="P"
+                            {{ old('jenis_kelamin') == 'P' ? 'checked' : '' }} required>
                         <span class="ml-2 text-gray-700">Perempuan</span>
                     </label>
                 </div>
@@ -69,7 +71,7 @@
                     <option value="">-- Pilih Kelas --</option>
                     @foreach ($semuaKelas as $kelas)
                         <option value="{{ $kelas->id }}" data-nama="{{ $kelas->nama_kelas }}"
-                            data-wali="{{ $kelas->wali_kelas }}">
+                            data-wali="{{ $kelas->wali_kelas }}" {{ old('kelas_id') == $kelas->id ? 'selected' : '' }}>
                             {{ $kelas->nama_kelas }} (Wali: {{ $kelas->wali_kelas }})
                         </option>
                     @endforeach
@@ -80,6 +82,13 @@
                 class="hidden transition-all duration-300 mb-4 bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
                 <p class="text-gray-800"><strong>Nama Kelas:</strong> <span id="namaKelas"></span></p>
                 <p class="text-gray-800"><strong>Wali Kelas:</strong> <span id="waliKelas"></span></p>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Foto Siswa (opsional)</label>
+                <input type="file" name="foto" accept="image/*"
+                    class="w-full border border-dashed border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-300 focus:outline-none">
+                <p class="text-xs text-gray-500 mt-1">Format jpg, jpeg, png dengan ukuran maksimal 5 MB.</p>
             </div>
 
             <div class="flex justify-between mt-6">
@@ -102,10 +111,10 @@
             const namaKelas = document.getElementById('namaKelas');
             const waliKelas = document.getElementById('waliKelas');
 
-            select.addEventListener('change', function () {
-                const option = this.options[this.selectedIndex];
-                const nama = option.getAttribute('data-nama');
-                const wali = option.getAttribute('data-wali');
+            const renderInfo = () => {
+                const option = select.options[select.selectedIndex];
+                const nama = option?.getAttribute('data-nama');
+                const wali = option?.getAttribute('data-wali');
 
                 if (nama && wali) {
                     infoBox.classList.remove('hidden');
@@ -116,7 +125,10 @@
                     namaKelas.textContent = '';
                     waliKelas.textContent = '';
                 }
-            });
+            };
+
+            select.addEventListener('change', renderInfo);
+            renderInfo();
         });
     </script>
 @endsection

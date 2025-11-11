@@ -3,123 +3,99 @@
 @section('title', 'Data Siswa')
 
 @section('content')
-
     <div class="max-w-7xl mx-auto mt-10">
-        <div class="flex justify-between items-center mb-5">
+        {{-- Header --}}
+        <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-700">Daftar Siswa</h1>
             <div class="flex gap-3">
                 <a href="{{ route('siswa.trash') }}"
-                    class="bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200">
+                    class="bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition">
                     🗑 Recycle Bin
                 </a>
                 <a href="{{ route('siswa.create') }}"
-                    class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
+                    class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">
                     + Tambah Siswa
                 </a>
             </div>
         </div>
 
+        {{-- Flash message --}}
         @if(session('success'))
             <div class="bg-green-100 text-green-700 px-4 py-2 rounded-md mb-4">
                 {{ session('success') }}
             </div>
         @endif
 
-        {{-- TABLE DATA AKTIF --}}
+        {{-- Table --}}
         <div class="overflow-x-auto bg-white shadow-md rounded-lg">
             <table class="w-full text-left">
                 <thead class="bg-gray-100">
                     <tr>
-                        <th class="py-3 px-4 text-gray-600 font-semibold">No</th>
+                        <th class="py-3 px-4 text-gray-600 font-semibold">Foto</th>
                         <th class="py-3 px-4 text-gray-600 font-semibold">NIS</th>
                         <th class="py-3 px-4 text-gray-600 font-semibold">Nama Lengkap</th>
-                        <th class="py-3 px-4 text-gray-600 font-semibold">Jenis Kelamin</th>
-                        <th class="py-3 px-4 text-gray-600 font-semibold">Alamat</th>
-                        <th class="py-3 px-4 text-gray-600 font-semibold">Tanggal Lahir</th>
                         <th class="py-3 px-4 text-gray-600 font-semibold">Kelas</th>
-                        <th class="py-3 px-4 text-gray-600 font-semibold">Wali Kelas</th>
-                        <th class="py-3 px-4 text-gray-600 font-semibold">Aksi</th>
+                        <th class="py-3 px-4 text-gray-600 font-semibold text-center">Aksi</th>
                     </tr>
                 </thead>
-
                 <tbody>
-                    @forelse ($semuaSiswa as $index => $item)
+                    @forelse ($semuaSiswa as $item)
                         <tr class="border-b hover:bg-gray-50">
-                            <td class="py-3 px-4">{{ $index + 1 }}</td>
-                            <td class="py-3 px-4">{{ $item->nis }}</td>
-                            <td class="py-3 px-4">{{ $item->nama_lengkap }}</td>
+                            {{-- Foto --}}
                             <td class="py-3 px-4">
-                                {{ $item->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}
+                                <img src="{{ $item->foto ? asset($item->foto) : asset('images/default-avatar.png') }}"
+                                    alt="{{ $item->nama_lengkap }}" class="w-12 h-12 rounded-md object-cover border shadow-sm">
                             </td>
-                            <td class="py-3 px-4">{{ $item->alamat }}</td>
-                            <td class="py-3 px-4">{{ \Carbon\Carbon::parse($item->tanggal_lahir)->translatedFormat('d F Y') }}</td>
-                            <td class="py-3 px-4">{{ $item->kelas->nama_kelas ?? '-' }}</td>
-                            <td class="py-3 px-4">{{ $item->kelas->wali_kelas ?? '-' }}</td>
 
-                            <td class="py-3 px-4 flex gap-3">
-                                <a href="{{ route('siswa.show', $item->id) }}" class="text-blue-600 hover:text-blue-800 font-medium">Detail</a>
-                                <a href="{{ route('siswa.edit', $item->id) }}" class="text-yellow-600 hover:text-yellow-800 font-medium">Edit</a>
+                            {{-- Info utama --}}
+                            <td class="py-3 px-4 font-mono">{{ $item->nis }}</td>
+                            <td class="py-3 px-4 font-semibold text-gray-700">{{ $item->nama_lengkap }}</td>
+                            <td class="py-3 px-4 text-gray-600">{{ $item->kelas->nama_kelas ?? '-' }}</td>
+
+                            {{-- Aksi --}}
+                            <td class="px-4 flex justify-center py-5">
+                                <a href="{{ route('siswa.show', $item->id) }}"
+                                    class="p-2 bg-blue-100 text-blue-600 rounded-s-xl hover:bg-blue-600 hover:text-white transition-all"
+                                    title="Detail">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" />
+                                        <circle cx="12" cy="12" r="3" />
+                                    </svg>
+                                </a>
+
+                                <a href="{{ route('siswa.edit', $item->id) }}"
+                                    class="p-2 bg-yellow-100 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-all"
+                                    title="Edit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path d="M15.232 5.232a2.828 2.828 0 114 4L7.5 21H3v-4.5l12.232-12.268z" />
+                                    </svg>
+                                </a>
 
                                 <form action="{{ route('siswa.destroy', $item->id) }}" method="POST"
-                                    onsubmit="return confirm('Hapus data ini?')" class="inline-block">
+                                    onsubmit="return confirm('Yakin mau hapus data ini?')" class="inline-block">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-800 font-medium">
-                                        Hapus
+                                    <button type="submit"
+                                        class="p-2 bg-red-100 text-red-600 rounded-e-xl hover:bg-red-600 hover:text-white transition-all"
+                                        title="Hapus">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
                                     </button>
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9" class="py-3 px-4 text-center text-gray-500">Tidak ada data siswa.</td>
+                            <td colspan="5" class="py-3 px-4 text-center text-gray-500">Belum ada data siswa.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-
-        {{-- RECYCLE BIN --}}
-        @if(isset($siswaTerhapus))
-        <h2 class="text-xl mt-10 font-bold text-gray-700">Recycle Bin</h2>
-        <div class="overflow-x-auto bg-white shadow-md rounded-lg mt-3">
-            <table class="w-full text-left">
-                <thead class="bg-red-100">
-                    <tr>
-                        <th class="py-3 px-4">Nama</th>
-                        <th class="py-3 px-4">Tanggal Dihapus</th>
-                        <th class="py-3 px-4">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($siswaTerhapus as $data)
-                        <tr class="border-b hover:bg-gray-50">
-                            <td class="py-3 px-4">{{ $data->nama_lengkap }}</td>
-                            <td class="py-3 px-4">{{ $data->deleted_at->format('d F Y H:i') }}</td>
-                            <td class="py-3 px-4 flex gap-3">
-                                <a href="{{ route('siswa.trash', $data->id) }}" class="text-green-600 hover:text-green-800 font-medium">
-                                    ♻ Restore
-                                </a>
-                                <form action="{{ route('siswa.trash', $data->id) }}" method="POST"
-                                    onsubmit="return confirm('Hapus permanen data ini?')" class="inline-block">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-800 font-medium">
-                                        ❌ Delete Permanen
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="3" class="py-3 px-4 text-center text-gray-500">Recycle Bin kosong</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-        @endif
-
     </div>
-
 @endsection
