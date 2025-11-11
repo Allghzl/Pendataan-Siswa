@@ -18,17 +18,16 @@
             <span class="text-gray-900">Data </span><span class="text-gray-500">Siswa</span>
         </a>
 
-        <div class="order-3 w-full md:order-none md:flex-1" x-data="globalSearch('{{ route('search') }}')">
+        <div class="order-3 w-full md:order-0 md:flex-1" x-data="globalSearch('{{ route('search') }}')">
             <div class="relative" @keydown.escape.window="open = false">
                 <div
                     class="flex items-center gap-2 bg-white border border-gray-200 rounded-full px-4 py-2 shadow-inner focus-within:border-blue-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" />
                     </svg>
-                    <input type="search" x-model="term"
-                        @input.debounce.400ms="search"
+                    <input type="search" x-model="term" @input.debounce.400ms="search"
                         @focus="open = hasResults || loading || error"
                         placeholder="Cari siswa (nama/NIS) atau kelas (nama/wali)"
                         class="flex-1 bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400" />
