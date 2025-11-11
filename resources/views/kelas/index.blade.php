@@ -6,10 +6,20 @@
     <div class="max-w-7xl mx-auto mt-10">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-700">Daftar Kelas</h1>
-            <a href="{{ route('kelas.create') }}"
-                class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">
-                + Tambah Kelas
-            </a>
+
+            <div class="flex gap-3">
+                {{-- Tombol Recycle Bin --}}
+                <a href="{{ route('kelas.trash') }}"
+                    class="bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200">
+                    🗑 Recycle Bin
+                </a>
+
+                {{-- Tombol Tambah Kelas --}}
+                <a href="{{ route('kelas.create') }}"
+                    class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">
+                    + Tambah Kelas
+                </a>
+            </div>
         </div>
 
         {{-- Notifikasi --}}
@@ -43,43 +53,21 @@
                                 {{ $kelas->wali_kelas }}
                             </td>
 
-                            {{-- Aksi --}}
-                            <td class="py-3 px-4 flex justify-center">
-                                {{-- Toggle --}}
-                                <button @click="open = !open"
-                                    class="p-2 bg-blue-100 text-blue-600 rounded-s-xl hover:bg-blue-600 hover:text-white transition"
-                                    title="Lihat Siswa">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                </button>
-
-                                {{-- Edit --}}
-                                <a href="{{ route('kelas.edit', $kelas->id) }}"
-                                    class="p-2 bg-yellow-100 text-yellow-600 hover:bg-yellow-500 hover:text-white transition"
-                                    title="Edit">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor" stroke-width="2">
-                                        <path d="M15.232 5.232a2.828 2.828 0 114 4L7.5 21H3v-4.5l12.232-12.268z" />
-                                    </svg>
+                            <td class="py-3 px-4 flex gap-3">
+                                <a href="{{ route('kelas.edit', $item->id) }}"
+                                    class="text-yellow-600 hover:text-yellow-800 font-medium">
+                                    Edit
                                 </a>
 
-                                {{-- Delete --}}
-                                <form action="{{ route('kelas.destroy', $kelas->id) }}" method="POST"
-                                    onsubmit="return confirm('Hapus data ini?')" class="inline-block">
+                                <form action="{{ route('kelas.destroy', $item->id) }}" method="POST"
+                                    onsubmit="return confirm('Hapus data ini?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit"
-                                        class="p-2 bg-red-100 text-red-600 rounded-e-xl hover:bg-red-600 hover:text-white transition"
-                                        title="Hapus">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
+                                    <button type="submit" class="text-red-600 hover:text-red-800 font-medium">
+                                        Hapus
                                     </button>
                                 </form>
+
                             </td>
                         </tr>
 

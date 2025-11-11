@@ -7,8 +7,10 @@
         <div class="bg-white shadow rounded-2xl p-6 border border-gray-100">
             <p class="text-sm uppercase tracking-wide text-gray-400 mb-2">Kelas</p>
             <h1 class="text-3xl font-bold text-gray-800">{{ $kelas->nama_kelas }}</h1>
-            <p class="text-gray-600 mt-2">Wali Kelas: <span class="font-medium text-gray-800">{{ $kelas->wali_kelas }}</span></p>
-            <p class="text-gray-600">Total Siswa: <span class="font-medium text-gray-800">{{ $kelas->siswa->count() }}</span></p>
+            <p class="text-gray-600 mt-2">Wali Kelas: <span
+                    class="font-medium text-gray-800">{{ $kelas->wali_kelas }}</span></p>
+            <p class="text-gray-600">Total Siswa: <span
+                    class="font-medium text-gray-800">{{ $kelas->siswa->count() }}</span></p>
         </div>
 
         <div class="bg-white shadow rounded-2xl p-6 border border-gray-100">
