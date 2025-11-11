@@ -16,6 +16,7 @@ return new class extends Migration
             $table->text('alamat');
             $table->date('tanggal_lahir');
             $table->foreignId('kelas_id')->constrained('kelas')->onDelete('cascade');
+            $table->string('foto')->nullable(); // ← tambahin ini
             $table->timestamps();
         });
     }
